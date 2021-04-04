@@ -2,24 +2,31 @@
 <html>
 
 <head>
-  <title>Login - CC Assignment 01 Task 1 Application</title>
+  <title>Register - CC Assignment 01 Task 1 Application</title>
   <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body class="flex">
-  <div class="container bisque flex-child-none">
-    <h1>Login</h1>
-    <form method="POST">
+  <div class="container light-blue flex-child-none">
+    <h1>Register</h1>
+    <form method="POST" enctype="multipart/form-data">
       <div class="grid">
         <label for="id">ID</label>
         <input type="text" name="id" id="login-id" autocomplete="off">
       </div>
       <div class="grid">
+        <label for="username">Username</label>
+        <input type="text" name="username" id="login-username">
+      </div>
+      <div class="grid">
         <label for="password">Password</label>
         <input type="password" name="password" id="login-password">
       </div>
-      <div class="flex margin-top"><input class="button" type="submit" value="Login">
-        <a class="register" href="/register">Register</a>
+      <div class="grid">
+        <label for="image">Image</label>
+        <input type="file" name="image" id="login-image" accept="image/*">
+      </div>
+      <div class="flex margin-top"><input class="button" type="submit" value="Register">
       </div>
 
       {% if error %}

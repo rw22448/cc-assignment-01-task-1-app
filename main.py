@@ -1,11 +1,13 @@
 import datetime
 
 from flask import Flask, render_template, request, flash, redirect, url_for
-from google.cloud import datastore
+from werkzeug.utils import secure_filename
+from google.cloud import datastore, storage
 
 app = Flask(__name__)
 
 datastore_client = datastore.Client()
+storage_client = storage.Client()
 
 
 @app.route('/')
@@ -24,8 +26,6 @@ def login():
         password = request.form['password']
 
         for user in users:
-            print(user)
-
             if id == user['id']:
                 if password == user['password']:
                     return redirect(url_for('index'))
@@ -37,6 +37,35 @@ def login():
     return render_template('login.html', error=error)
 
 
+@app.route('/register', methods=('GET', 'POST'))
+def register():
+    users = fetch_users()
+    error = None
+
+    if request.method == 'POST':
+        id = request.form['id']
+        username = request.form['username']
+        password = request.form['password']
+        image = request.files['image']
+        filename = secure_filename(image.filename)
+
+        for user in users:
+            if not id or not username or not password or not image:
+                error = 'Missing input fields'
+            elif id == user['id']:
+                error = 'The ID already exists'
+            elif username == user['user_name']:
+                error = 'The username already exists'
+            else:
+                upload_image(
+                    image, 'cc-assignment-01-task-1-app.appspot.com', filename)
+
+                store_user(id, username, password)
+                return redirect(url_for('login'))
+
+    return render_template('register.html', error=error)
+
+
 def fetch_users():
     query = datastore_client.query(kind='user')
     query.order = ['id']
@@ -44,6 +73,23 @@ def fetch_users():
     output = query.fetch()
 
     return list(output)
+
+
+def store_user(id, username, password):
+    entity = datastore.Entity(key=datastore_client.key('user'))
+    entity.update({
+        'id': id,
+        'user_name': username,
+        'password': password
+    })
+
+    datastore_client.put(entity)
+
+
+def upload_image(file, bucket, blob):
+    bucket = storage_client.get_bucket(bucket)
+    blob = bucket.blob(blob)
+    blob.upload_from_file(file)
 
 
 if __name__ == '__main__':
