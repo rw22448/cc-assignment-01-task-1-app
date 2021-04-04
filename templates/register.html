@@ -12,19 +12,19 @@
     <form method="POST" enctype="multipart/form-data">
       <div class="grid">
         <label for="id">ID</label>
-        <input type="text" name="id" id="login-id" autocomplete="off">
+        <input type="text" name="id" id="login-id" autocomplete="off" required>
       </div>
       <div class="grid">
         <label for="username">Username</label>
-        <input type="text" name="username" id="login-username">
+        <input type="text" name="username" id="login-username" required>
       </div>
       <div class="grid">
         <label for="password">Password</label>
-        <input type="password" name="password" id="login-password">
+        <input type="password" name="password" id="login-password" required>
       </div>
       <div class="grid">
         <label for="image">Image</label>
-        <input type="file" name="image" id="login-image" accept="image/*">
+        <input type="file" name="image" id="login-image" accept="image/*" required>
       </div>
       <div class="flex margin-top"><input class="button" type="submit" value="Register">
       </div>

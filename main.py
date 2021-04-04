@@ -50,18 +50,19 @@ def register():
         filename = secure_filename(image.filename)
 
         for user in users:
-            if not id or not username or not password or not image:
-                error = 'Missing input fields'
-            elif id == user['id']:
+            if id == user['id']:
                 error = 'The ID already exists'
-            elif username == user['user_name']:
-                error = 'The username already exists'
-            else:
-                upload_image(
-                    image, 'cc-assignment-01-task-1-app.appspot.com', filename)
 
-                store_user(id, username, password)
-                return redirect(url_for('login'))
+        for user in users:
+            if username == user['user_name']:
+                error = 'The username already exists'
+
+        if error is None:
+            upload_image(
+                image, 'cc-assignment-01-task-1-app.appspot.com', filename)
+
+            store_user(id, username, password)
+            return redirect(url_for('login'))
 
     return render_template('register.html', error=error)
 
