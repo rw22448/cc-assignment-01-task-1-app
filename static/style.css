@@ -1,0 +1,46 @@
+body {
+  font-family: 'helvetica', sans-serif;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-child-none {
+  flex: none;
+  margin: auto;
+}
+
+.container {
+  box-sizing: border-box;
+  width: 400px;
+  border-radius: 8px;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  padding: 24px;
+  background-color: bisque;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: auto 240px;
+}
+
+.margin-top {
+  margin-top: 24px;
+}
+
+.button {
+  padding: 2px 24px;
+}
+
+.register {
+  font-weight: 400;
+  font-size: 13.3333px;
+  font-family: Arial;
+  margin-left: 40px;
+  align-self: center;
+}
+
+.red-text {
+  color: red;
+}

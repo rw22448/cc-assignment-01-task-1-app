@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Login - CC Assignment 01 Task 1 Application</title>
+  <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="flex">
+  <div class="container flex-child-none">
+    <h1>Login</h1>
+    <form method="POST">
+      <div class="grid">
+        <label for="id">ID</label>
+        <input type="text" name="id" id="login-id" autocomplete="off">
+      </div>
+      <div class="grid">
+        <label for="password">Password</label>
+        <input type="password" name="password" id="login-password">
+      </div>
+      <div class="flex margin-top"><input class="button" type="submit" value="Login">
+        <a class="register" href="#">Register</a>
+      </div>
+
+      {% if error %}
+      <div class="red-text">
+        <p>{{ error }}</p>
+      </div>
+      {% endif %}
+    </form>
+  </div>
+
+
+</body>
+
+</html>
