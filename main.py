@@ -3,11 +3,13 @@ import datetime
 from flask import Flask, render_template, request, flash, redirect, url_for
 from werkzeug.utils import secure_filename
 from google.cloud import datastore, storage
+from localStoragePy import localStoragePy
 
 app = Flask(__name__)
 
 datastore_client = datastore.Client()
 storage_client = storage.Client()
+localStorage = localStoragePy('cc-assignment-01-task-1-app', 'text')
 
 
 @app.route('/')
@@ -28,7 +30,8 @@ def login():
         for user in users:
             if id == user['id']:
                 if password == user['password']:
-                    return redirect(url_for('index'))
+                    localStorage.setItem('user_id', user['id'])
+                    return redirect(url_for('forum'))
                 else:
                     error = 'ID or password is invalid'
             else:
@@ -58,6 +61,7 @@ def register():
                 error = 'The username already exists'
 
         if error is None:
+            # TODO: update filename to use id as unique identifier
             upload_image(
                 image, 'cc-assignment-01-task-1-app.appspot.com', filename)
 
@@ -65,6 +69,29 @@ def register():
             return redirect(url_for('login'))
 
     return render_template('register.html', error=error)
+
+
+@app.route('/forum')
+def forum():
+    if not localStorage.getItem('user_id'):
+        return redirect(url_for('login'))
+
+    user_id = localStorage.getItem('user_id')
+
+    return render_template('forum.html', user_id=user_id)
+
+
+@app.route('/user-page')
+def user_page():
+
+    return render_template('user_page.html')
+
+
+@app.route('/logout')
+def logout():
+    localStorage.removeItem('user_id')
+
+    return redirect(url_for('login'))
 
 
 def fetch_users():

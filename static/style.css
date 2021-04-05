@@ -6,6 +6,11 @@ body {
   display: flex;
 }
 
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
 .flex-child-none {
   flex: none;
   margin: auto;
@@ -19,12 +24,28 @@ body {
   padding: 24px;
 }
 
+.big-container {
+  box-sizing: border-box;
+  width: 1000px;
+  border-radius: 8px;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  padding: 24px;
+}
+
 .bisque {
   background-color: bisque;
 }
 
 .light-blue {
   background-color: lightblue;
+}
+
+.khaki {
+  background-color: khaki;
+}
+
+.light-steel-blue {
+  background-color: lightsteelblue;
 }
 
 .grid {
@@ -40,7 +61,7 @@ body {
   padding: 2px 24px;
 }
 
-.register {
+.sublink {
   font-weight: 400;
   font-size: 13.3333px;
   font-family: Arial;

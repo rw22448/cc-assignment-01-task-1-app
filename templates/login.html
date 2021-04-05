@@ -6,7 +6,7 @@
   <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body class="flex">
+<body class="flex-column">
   <div class="container bisque flex-child-none">
     <h1>Login</h1>
     <form method="POST">
@@ -18,8 +18,9 @@
         <label for="password">Password</label>
         <input type="password" name="password" id="login-password" required>
       </div>
-      <div class="flex margin-top"><input class="button" type="submit" value="Login">
-        <a class="register" href="/register">Register</a>
+      <div class="flex margin-top">
+        <input class="button" type="submit" value="Login">
+        <a class="sublink" href="/register">Register</a>
       </div>
 
       {% if error %}

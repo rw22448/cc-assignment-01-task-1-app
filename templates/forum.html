@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Forum - CC Assignment 01 Task 1 Application</title>
+  <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="flex-column">
+  <div class="big-container khaki flex-child-none">
+    <h1>Forum</h1>
+    <a href="/logout">Logout</a>
+
+  </div>
+
+  <div class="big-container margin-top light-steel-blue flex-child-none">
+    <h1>User area</h1>
+    <div>
+      <a href="user-page">{{ user_id }}</a>
+    </div>
+  </div>
+
+</body>
+
+</html>

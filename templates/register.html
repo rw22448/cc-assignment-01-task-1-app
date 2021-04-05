@@ -6,7 +6,7 @@
   <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body class="flex">
+<body class="flex-column">
   <div class="container light-blue flex-child-none">
     <h1>Register</h1>
     <form method="POST" enctype="multipart/form-data">
@@ -26,7 +26,9 @@
         <label for="image">Image</label>
         <input type="file" name="image" id="login-image" accept="image/*" required>
       </div>
-      <div class="flex margin-top"><input class="button" type="submit" value="Register">
+      <div class="flex margin-top">
+        <input class="button" type="submit" value="Register">
+        <a class="sublink" href="/login">Login</a>
       </div>
 
       {% if error %}
