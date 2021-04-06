@@ -13,6 +13,9 @@ body {
 
 .flex-child-none {
   flex: none;
+}
+
+.margin-auto {
   margin: auto;
 }
 
@@ -32,6 +35,14 @@ body {
   padding: 24px;
 }
 
+.post-container {
+  box-sizing: border-box;
+  width: 800px;
+  border-radius: 8px;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  padding: 24px;
+}
+
 .bisque {
   background-color: bisque;
 }
@@ -44,13 +55,34 @@ body {
   background-color: khaki;
 }
 
+.dark-salmon {
+  background-color: darksalmon;
+}
+
 .light-steel-blue {
   background-color: lightsteelblue;
+}
+
+.light-sea-green {
+  background-color: lightseagreen;
+}
+
+.white {
+  background-color: white;
+}
+
+.light-gray {
+  background-color: lightgray;
 }
 
 .grid {
   display: grid;
   grid-template-columns: auto 240px;
+}
+
+.forum-grid {
+  display: grid;
+  grid-template-columns: 200px auto;
 }
 
 .margin-top {
@@ -71,4 +103,10 @@ body {
 
 .red-text {
   color: red;
+}
+
+.user-area-grid {
+  display: grid;
+  grid-template-columns: 120px auto;
+  gap: 24px;
 }

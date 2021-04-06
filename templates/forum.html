@@ -7,17 +7,73 @@
 </head>
 
 <body class="flex-column">
-  <div class="big-container khaki flex-child-none">
+  <div class="big-container khaki margin-auto">
     <h1>Forum</h1>
     <a href="/logout">Logout</a>
 
   </div>
 
-  <div class="big-container margin-top light-steel-blue flex-child-none">
+  <div class="big-container margin-top light-steel-blue margin-auto">
     <h1>User area</h1>
-    <div>
-      <a href="user-page">{{ user_id }}</a>
+    <div class="user-area-grid">
+      <div>
+        <img width="120" height="120"
+          src="https://storage.googleapis.com/cc-assignment-01-task-1-app.appspot.com/{{ user_id }}.png"
+          alt="Profile image">
+      </div>
+      <div>
+        <span>ID:
+          <a href="user-page">{{ user_id }}</a>
+        </span>
+      </div>
     </div>
+  </div>
+
+  <div class="big-container dark-salmon margin-top margin-auto">
+    <h1>Message post</h1>
+    <form method="POST" enctype="multipart/form-data">
+      <div class="forum-grid">
+        <label for="subject">Subject</label>
+        <input type="text" name="subject" id="message-subject" autocomplete="off" required>
+      </div>
+      <div class="forum-grid">
+        <label for="message">Message</label>
+        <textarea name="message" id="message-message" autocomplete="off" required rows="5"></textarea>
+      </div>
+      <div class="forum-grid">
+        <label for="image">Image</label>
+        <input type="file" name="image" id="login-image" accept="image/*" required>
+      </div>
+      <div class="flex margin-top">
+        <input class="button" type="submit" value="Submit">
+      </div>
+    </form>
+  </div>
+
+  <!-- RE: 5.2.1 (message display) - couldn't get async/await to work, live updating of messages 
+  requires 1 extra page refresh (try not to accidentally submit data twice while refreshing) -->
+  <div class="big-container light-sea-green margin-top margin-auto flex-column">
+    <h1>Message display</h1>
+    {% for post in posts %}
+    <div class="post-container white margin-top margin-auto">
+      <div>
+        <div>
+          {{ post['datetime'].ctime() }} | {{ post['user_id'] }}
+        </div>
+        <div>
+          <img width="40" height="40"
+            src="https://storage.googleapis.com/cc-assignment-01-task-1-app-message-images/{{ post['image_id'] }}"
+            alt="Author image">
+        </div>
+      </div>
+      <div>
+        {{ post['subject'] }}
+      </div>
+      <div>
+        {{ post['message'] }}
+      </div>
+    </div>
+    {% endfor %}
   </div>
 
 </body>
