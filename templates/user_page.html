@@ -11,6 +11,28 @@
     <h1>User Page</h1>
     <a href="/forum">Back</a>
 
+    <div class="container white flex-child-none margin-auto margin-top">
+      <h1>Change password</h1>
+      <form method="POST">
+        <div class="grid">
+          <label for="password">Old password</label>
+          <input type="password" name="old-password" id="change-password-old" required>
+        </div>
+        <div class="grid">
+          <label for="password">New password</label>
+          <input type="password" name="new-password" id="change-password-new" required>
+        </div>
+        <div class="margin-top">
+          <input class="button" type="submit" value="Change">
+        </div>
+
+        {% if error %}
+        <div class="red-text">
+          <p>{{ error }}</p>
+        </div>
+        {% endif %}
+      </form>
+    </div>
   </div>
 
 </body>

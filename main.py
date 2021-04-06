@@ -92,10 +92,23 @@ def forum():
     return render_template('forum.html', user_id=user_id, posts=posts)
 
 
-@app.route('/user-page')
+@app.route('/user-page', methods=('GET', 'POST'))
 def user_page():
+    user = fetch_specific_user(localStorage.getItem('user_id'))
 
-    return render_template('user_page.html')
+    error = None
+
+    if request.method == 'POST':
+        old_password = request.form['old-password']
+        new_password = request.form['new-password']
+
+        if not old_password == user['password']:
+            error = 'The old password is incorrect'
+        else:
+            update_specific_user(user['id'], user['user_name'], new_password)
+            return redirect(url_for('logout'))
+
+    return render_template('user_page.html', error=error)
 
 
 @app.route('/logout')
@@ -112,6 +125,27 @@ def fetch_users(limit=None):
     output = query.fetch(limit=limit)
 
     return list(output)
+
+
+def fetch_specific_user(user_id):
+    query = datastore_client.query(kind='user')
+
+    output = query.add_filter('id', '=', user_id).fetch()
+
+    output_list = list(output)
+
+    return output_list[0]
+
+
+def update_specific_user(user_id, user_name, new_password):
+    entity = fetch_specific_user(user_id)
+    entity.update({
+        'id': user_id,
+        'user_name': user_name,
+        'password': new_password
+    })
+
+    datastore_client.put(entity)
 
 
 def fetch_posts(limit=None):
