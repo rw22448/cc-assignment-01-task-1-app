@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Edit Post - CC Assignment 01 Task 1 Application</title>
+  <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="flex-column">
+  <div class="big-container light-gray flex-child-none margin-auto">
+    <h1>Edit post</h1>
+    <a href="/user-page">Back</a>
+
+    <form method="POST" class="margin-top" enctype="multipart/form-data">
+      <div class="forum-grid">
+        <label for="subject">Subject</label>
+        <input type="text" name="subject" id="message-subject" autocomplete="off" value="{{ post['subject'] }}"
+          required>
+      </div>
+      <div class="forum-grid">
+        <label for="message">Message</label>
+        <textarea name="message" id="message-message" autocomplete="off" required
+          rows="5">{{ post['message'] }}</textarea>
+      </div>
+      <div class="forum-grid">
+        <label for="image">Previous image</label>
+        <div>
+          <img width="40" height="40"
+            src="https://storage.googleapis.com/cc-assignment-01-task-1-app-message-images/{{ post['image_id'] }}"
+            alt="Author image">
+        </div>
+      </div>
+      <div class="forum-grid">
+        <label for="image">New image</label>
+        <input type="file" name="image" id="login-image" accept="image/*" required>
+      </div>
+      <div class="flex margin-top">
+        <input class="button" type="submit" value="Update">
+      </div>
+    </form>
+  </div>
+</body>
+
+</html>

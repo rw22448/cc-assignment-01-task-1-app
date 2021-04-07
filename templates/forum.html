@@ -47,6 +47,12 @@
       <div class="flex margin-top">
         <input class="button" type="submit" value="Submit">
       </div>
+
+      {% if error %}
+      <div class="red-text">
+        <p>{{ error }}</p>
+      </div>
+      {% endif %}
     </form>
   </div>
 

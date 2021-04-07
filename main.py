@@ -1,4 +1,6 @@
 import datetime
+import urllib.parse as urlparse
+from urllib.parse import parse_qs
 
 from flask import Flask, render_template, request, flash, redirect, url_for
 from werkzeug.utils import secure_filename
@@ -14,8 +16,7 @@ localStorage = localStoragePy('cc-assignment-01-task-1-app', 'text')
 
 @app.route('/')
 def index():
-
-    return render_template('index.html')
+    return redirect(url_for('login'))
 
 
 @app.route('/login', methods=('GET', 'POST'))
@@ -60,8 +61,9 @@ def register():
                 error = 'The username already exists'
 
         if error is None:
+            # Must append '.png' to end of filename (and be .png type) due to GCS not being able to rename images once uploaded
             upload_image(
-                image, 'cc-assignment-01-task-1-app.appspot.com', id)
+                image, 'cc-assignment-01-task-1-app.appspot.com', id + '.png')
 
             store_user(id, username, password)
             return redirect(url_for('login'))
@@ -76,6 +78,8 @@ def forum():
 
     user_id = localStorage.getItem('user_id')
     posts = fetch_posts(10)
+    all_posts = fetch_posts()
+    error = None
 
     if request.method == 'POST':
         subject = request.form['subject']
@@ -84,12 +88,17 @@ def forum():
         filename = secure_filename(image.filename)
         current_datetime = datetime.datetime.now()
 
-        store_post(subject, message, subject +
-                   filename, current_datetime, user_id)
-        upload_image(
-            image, 'cc-assignment-01-task-1-app-message-images', subject + filename)
+        for post in all_posts:
+            if post['post_id'] == subject + '-' + user_id:
+                error = 'Subject name already used'
 
-    return render_template('forum.html', user_id=user_id, posts=posts)
+        if error == None:
+            store_post(subject, message, subject + filename,
+                       current_datetime, user_id, subject + '-' + user_id)
+            upload_image(
+                image, 'cc-assignment-01-task-1-app-message-images', subject + filename)
+
+    return render_template('forum.html', user_id=user_id, posts=posts, error=error)
 
 
 @app.route('/user-page', methods=('GET', 'POST'))
@@ -97,6 +106,7 @@ def user_page():
     user = fetch_specific_user(localStorage.getItem('user_id'))
 
     error = None
+    posts = fetch_user_posts(user['id'])
 
     if request.method == 'POST':
         old_password = request.form['old-password']
@@ -108,7 +118,30 @@ def user_page():
             update_specific_user(user['id'], user['user_name'], new_password)
             return redirect(url_for('logout'))
 
-    return render_template('user_page.html', error=error)
+    return render_template('user_page.html', error=error, posts=posts)
+
+
+@app.route('/edit-post', methods=('GET', 'POST'))
+def edit_post():
+    url = parsed = urlparse.urlparse(request.url)
+    post_id = parse_qs(parsed.query)['POST_ID'][0]
+    post = fetch_specific_post(post_id)
+
+    if request.method == 'POST':
+        subject = request.form['subject']
+        message = request.form['message']
+        image = request.files['image']
+        filename = secure_filename(image.filename)
+        current_datetime = datetime.datetime.now()
+
+        update_specific_post(post_id, subject, message, subject + filename,
+                             current_datetime, localStorage.getItem('user_id'))
+        upload_image(
+            image, 'cc-assignment-01-task-1-app-message-images', subject + filename)
+
+        return redirect(url_for('forum'))
+
+    return render_template('edit_post.html', post=post)
 
 
 @app.route('/logout')
@@ -137,12 +170,36 @@ def fetch_specific_user(user_id):
     return output_list[0]
 
 
+def fetch_specific_post(post_id):
+    query = datastore_client.query(kind='post')
+
+    output = query.add_filter('post_id', '=', post_id).fetch()
+
+    output_list = list(output)
+
+    return output_list[0]
+
+
 def update_specific_user(user_id, user_name, new_password):
     entity = fetch_specific_user(user_id)
     entity.update({
         'id': user_id,
         'user_name': user_name,
         'password': new_password
+    })
+
+    datastore_client.put(entity)
+
+
+def update_specific_post(post_id, subject, message, image_id, current_datetime, user_id):
+    entity = fetch_specific_post(post_id)
+    entity.update({
+        'subject': subject,
+        'message': message,
+        'image_id': image_id,
+        'datetime': current_datetime,
+        'user_id': user_id,
+        'post_id': post_id
     })
 
     datastore_client.put(entity)
@@ -157,6 +214,20 @@ def fetch_posts(limit=None):
     return list(output)
 
 
+def fetch_user_posts(user_id):
+    posts = fetch_posts()
+    filtered_posts = filter(filter_posts_by_user, posts)
+
+    return list(filtered_posts)
+
+
+def filter_posts_by_user(post):
+    if post['user_id'] == localStorage.getItem('user_id'):
+        return True
+    else:
+        return False
+
+
 def store_user(id, username, password):
     entity = datastore.Entity(key=datastore_client.key('user'))
     entity.update({
@@ -168,14 +239,15 @@ def store_user(id, username, password):
     datastore_client.put(entity)
 
 
-def store_post(subject, message, image_id, current_datetime, user_id):
+def store_post(subject, message, image_id, current_datetime, user_id, post_id):
     entity = datastore.Entity(key=datastore_client.key('post'))
     entity.update({
         'subject': subject,
         'message': message,
         'image_id': image_id,
         'datetime': current_datetime,
-        'user_id': user_id
+        'user_id': user_id,
+        'post_id': post_id
     })
 
     datastore_client.put(entity)

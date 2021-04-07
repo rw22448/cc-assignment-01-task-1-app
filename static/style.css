@@ -75,6 +75,10 @@ body {
   background-color: lightgray;
 }
 
+.light-pink {
+  background-color: lightpink;
+}
+
 .grid {
   display: grid;
   grid-template-columns: auto 240px;

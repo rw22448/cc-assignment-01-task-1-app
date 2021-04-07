@@ -8,7 +8,7 @@
 
 <body class="flex-column">
   <div class="big-container light-gray flex-child-none margin-auto">
-    <h1>User Page</h1>
+    <h1>User page</h1>
     <a href="/forum">Back</a>
 
     <div class="container white flex-child-none margin-auto margin-top">
@@ -33,6 +33,33 @@
         {% endif %}
       </form>
     </div>
+  </div>
+
+  <div class="big-container light-pink flex-child-none margin-auto margin-top">
+    <h1>Edit posts</h1>
+    {% for post in posts %}
+    <div class="medium-container white margin-top margin-auto">
+      <div>
+        <div>
+          {{ post['datetime'].ctime() }} | {{ post['user_id'] }}
+        </div>
+        <div>
+          <img width="40" height="40"
+            src="https://storage.googleapis.com/cc-assignment-01-task-1-app-message-images/{{ post['image_id'] }}"
+            alt="Author image">
+        </div>
+      </div>
+      <div>
+        {{ post['subject'] }}
+      </div>
+      <div>
+        {{ post['message'] }}
+      </div>
+      <div>
+        <a href="/edit-post?POST_ID={{ post['post_id'] }}">Edit</a>
+      </div>
+    </div>
+    {% endfor %}
   </div>
 
 </body>
