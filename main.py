@@ -101,7 +101,7 @@ def forum():
     return render_template('forum.html', user_id=user_id, posts=posts, error=error)
 
 
-@app.route('/user-page', methods=('GET', 'POST'))
+@app.route('/userpage', methods=('GET', 'POST'))
 def user_page():
     user = fetch_specific_user(localStorage.getItem('user_id'))
 
@@ -121,7 +121,7 @@ def user_page():
     return render_template('user_page.html', error=error, posts=posts)
 
 
-@app.route('/edit-post', methods=('GET', 'POST'))
+@app.route('/editpost', methods=('GET', 'POST'))
 def edit_post():
     url = parsed = urlparse.urlparse(request.url)
     post_id = parse_qs(parsed.query)['POST_ID'][0]
